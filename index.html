@@ -3,271 +3,457 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Utrovački prevodilac</title>
+  <title>Utrovački Prevodilac</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700;800&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --crna: #0a0a0a;
+      --zuta: #FFE03D;
+      --narandzasta: #FF5C1A;
+      --bela: #F5F0E8;
+      --siva: #1a1a1a;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
+      background: var(--crna);
+      color: var(--bela);
+      font-family: 'Syne', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    .kursor {
+      width: 20px; height: 20px;
+      background: var(--zuta);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.1s ease, width 0.2s, height 0.2s;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: difference;
+    }
+    .kursor.veliki { width: 50px; height: 50px; }
+
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
+      padding: 1.5rem 3rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      background: rgba(10,10,10,0.7);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 3px;
+      color: var(--zuta);
+    }
+    .nav-logo span { color: var(--narandzasta); }
+
+    .nav-link {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: rgba(245,240,232,0.5);
+      text-decoration: none;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--zuta); }
+
+    .hero {
       min-height: 100vh;
-      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 3rem 4rem;
+      position: relative;
+      overflow: hidden;
     }
 
-    .kartica {
-      background: white;
-      border-radius: 16px;
-      padding: 2rem;
-      width: 100%;
-      max-width: 560px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    .hero-bg-text {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22vw;
+      color: rgba(255,255,255,0.02);
+      white-space: nowrap;
+      pointer-events: none;
+      letter-spacing: -5px;
+      user-select: none;
     }
 
-    h1 { font-size: 22px; margin-bottom: 0.5rem; color: #1a1a1a; }
-    p.opis { font-size: 13px; color: #888; margin-bottom: 1.5rem; }
+    .hero-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      color: var(--narandzasta);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-naslov {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 12vw, 11rem);
+      line-height: 0.9;
+      letter-spacing: -2px;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+    .hero-naslov .zuta { color: var(--zuta); }
+    .hero-naslov .narandzasta { color: var(--narandzasta); }
+
+    .hero-opis {
+      margin-top: 2rem;
+      font-size: 1.1rem;
+      color: rgba(245,240,232,0.6);
+      max-width: 420px;
+      line-height: 1.7;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-cta {
+      margin-top: 3rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .btn-glavni {
+      background: var(--zuta);
+      color: var(--crna);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 3px;
+      padding: 1rem 2.5rem;
+      border: none;
+      cursor: none;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.2s, background 0.2s;
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    }
+    .btn-glavni:hover { background: var(--narandzasta); transform: scale(1.04); }
+
+    .hero-primer {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      color: rgba(245,240,232,0.4);
+      font-style: italic;
+    }
+
+    .deco-linija {
+      position: absolute;
+      right: 3rem; top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      animation: fadeUp 1s 0.5s ease both;
+    }
+    .deco-linija span {
+      display: block; height: 1px;
+      background: rgba(255,224,61,0.3);
+    }
+
+    .traka {
+      background: var(--zuta);
+      padding: 1rem 0;
+      overflow: hidden;
+    }
+
+    .traka-sadrzaj {
+      display: flex;
+      gap: 3rem;
+      animation: marquee 18s linear infinite;
+      white-space: nowrap;
+    }
+
+    .traka-item {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 3px;
+      color: var(--crna);
+      flex-shrink: 0;
+    }
+    .traka-tacka { color: var(--narandzasta); }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    .sekcija { padding: 8rem 3rem; }
+
+    .sekcija-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      color: var(--narandzasta);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .sekcija-naslov {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 6vw, 5rem);
+      line-height: 1;
+      margin-bottom: 4rem;
+    }
+
+    .koraci-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .korak-kartica {
+      background: var(--crna);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+    .korak-kartica:hover { background: var(--siva); }
+
+    .korak-broj {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem;
+      color: rgba(255,255,255,0.05);
+      position: absolute;
+      top: -10px; right: 16px;
+      line-height: 1;
+    }
+
+    .korak-ikona { font-size: 1.8rem; margin-bottom: 1.2rem; }
+
+    .korak-naslov {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      margin-bottom: 0.8rem;
+      color: var(--zuta);
+    }
+
+    .korak-tekst {
+      font-size: 0.9rem;
+      color: rgba(245,240,232,0.55);
+      line-height: 1.7;
+    }
+
+    .korak-formula {
+      margin-top: 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--narandzasta);
+      background: rgba(255,92,26,0.1);
+      padding: 6px 10px;
+      display: inline-block;
+    }
+
+    .prevodilac-sekcija {
+      padding: 4rem 3rem 8rem;
+      background: var(--siva);
+      position: relative;
+    }
+    .prevodilac-sekcija::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 3rem; right: 3rem;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--zuta), transparent);
+    }
+
+    .prevodilac-wrapper { max-width: 680px; margin: 0 auto; }
 
     .prekidac {
       display: flex;
-      gap: 8px;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      overflow: hidden;
     }
 
     .prekidac button {
       flex: 1;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      background: #f7f7f7;
-      cursor: pointer;
-      font-size: 14px;
-      color: #555;
+      padding: 0.9rem;
+      border: none;
+      background: transparent;
+      cursor: none;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      color: rgba(245,240,232,0.4);
       transition: all 0.2s;
     }
-
-    .prekidac button.aktivan {
-      background: #1a1a1a;
-      color: white;
-      border-color: #1a1a1a;
-    }
+    .prekidac button.aktivan { background: var(--zuta); color: var(--crna); }
 
     .red {
-      display: flex;
-      gap: 12px;
-      align-items: flex-end;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: end;
       margin-bottom: 1.5rem;
     }
 
-    .kolona { flex: 1; }
-
-    label {
+    .kolona label {
       display: block;
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 6px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(245,240,232,0.4);
+      margin-bottom: 8px;
     }
 
     input[type="text"] {
       width: 100%;
-      font-size: 18px;
-      padding: 10px 14px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--bela);
+      font-family: 'Space Mono', monospace;
+      font-size: 1.4rem;
+      padding: 1rem 1.2rem;
       outline: none;
       transition: border-color 0.2s;
+      caret-color: var(--zuta);
     }
+    input[type="text"]:focus { border-color: var(--zuta); }
+    input[type="text"]::placeholder { color: rgba(245,240,232,0.2); }
 
-    input[type="text"]:focus { border-color: #555; }
-
-    .strelica { font-size: 24px; color: #aaa; padding-bottom: 10px; }
+    .strelica {
+      font-size: 1.5rem;
+      color: var(--narandzasta);
+      padding-bottom: 1rem;
+      text-align: center;
+    }
 
     .rezultat-box {
       width: 100%;
-      font-size: 22px;
-      font-weight: bold;
-      padding: 10px 14px;
-      background: #f7f7f7;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      min-height: 50px;
-      color: #1a1a1a;
+      background: rgba(255,224,61,0.05);
+      border: 1px solid rgba(255,224,61,0.2);
+      color: var(--zuta);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 2px;
+      padding: 1rem 1.2rem;
+      min-height: 68px;
     }
 
-    .greska { color: #cc3333; font-size: 14px; margin-bottom: 1rem; }
-    .koraci { border-top: 1px solid #eee; padding-top: 1rem; }
-    .koraci:empty { border-top: none; }
-
-    .korak {
-      font-size: 13px;
-      color: #555;
-      padding: 5px 0;
-      border-bottom: 1px solid #f0f0f0;
+    .greska {
+      color: var(--narandzasta);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      margin-bottom: 1rem;
     }
 
-    .korak:last-child { border-bottom: none; }
-    .brisi { color: #cc3333; font-weight: bold; }
-    .dodaj { color: #228833; font-weight: bold; }
+    .koraci-prikaz { margin-top: 0.5rem; }
+
+    .korak-red {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: rgba(245,240,232,0.4);
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .korak-red:last-child { border-bottom: none; }
+    .brisi { color: #ff6b6b; }
+    .dodaj { color: #69db7c; }
+
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 3px;
+      color: var(--zuta);
+    }
+
+    .footer-tekst {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: rgba(245,240,232,0.3);
+      letter-spacing: 1px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.vidljivo { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 600px) {
+      nav { padding: 1rem 1.5rem; }
+      .hero { padding: 7rem 1.5rem 3rem; }
+      .sekcija { padding: 5rem 1.5rem; }
+      .prevodilac-sekcija { padding: 3rem 1.5rem 5rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+      .deco-linija { display: none; }
+      .red { grid-template-columns: 1fr; }
+      .strelica { transform: rotate(90deg); }
+    }
   </style>
 </head>
 <body>
 
-<div class="kartica">
-  <h1>Utrovački prevodilac</h1>
-  <p class="opis">Utrovački jezik: <strong>deda</strong> → <strong>udazadenje</strong></p>
+<div class="kursor" id="kursor"></div>
 
-  <div class="prekidac">
-    <button id="btn-normalno" class="aktivan" onclick="setSmer('normalno')">Normalno → Utrovački</button>
-    <button id="btn-obrnuto" onclick="setSmer('obrnuto')">Utrovački → Normalno</button>
+<nav>
+  <div class="nav-logo">Utro<span>vački</span></div>
+  <a href="#prevodilac" class="nav-link">↓ Probaj</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg-text">UTRO</div>
+  <div class="deco-linija">
+    <span style="width:60px"></span>
+    <span style="width:40px"></span>
+    <span style="width:80px"></span>
+    <span style="width:30px"></span>
+    <span style="width:55px"></span>
   </div>
-
-  <div class="red">
-    <div class="kolona">
-      <label id="label-ulaz">Unesi reč</label>
-      <input type="text" id="ulaz" placeholder="" oninput="prevedi()" />
-    </div>
-    <div class="strelica">→</div>
-    <div class="kolona">
-      <label>Rezultat</label>
-      <div class="rezultat-box" id="rezultat"></div>
-    </div>
+  <div class="hero-tag">// Tajni jezik · Verzija 1.0</div>
+  <h1 class="hero-naslov">
+    UTRO<span class="zuta">VAČ</span><br>
+    <span class="narandzasta">KI</span> JEZIK
+  </h1>
+  <p class="hero-opis">
+    Tajni jezik koji su deca izmišljala u školskim hodnicima.
+    Sada u digitalnom obliku — prevedi bilo koju reč za sekund.
+  </p>
+  <div class="hero-cta">
+    <a href="#prevodilac" class="btn-glavni">Počni da prevodiš</a>
+    <span class="hero-primer">deda → udazadenje</span>
   </div>
+</section>
 
-  <div class="greska" id="greska"></div>
-  <div class="koraci" id="koraci"></div>
-</div>
-
-<script>
-  let smer = 'normalno';
-
-  function setSmer(novi) {
-    smer = novi;
-    document.getElementById('ulaz').value = '';
-    document.getElementById('rezultat').textContent = '';
-    document.getElementById('koraci').innerHTML = '';
-    document.getElementById('greska').textContent = '';
-
-    if (smer === 'normalno') {
-      document.getElementById('btn-normalno').classList.add('aktivan');
-      document.getElementById('btn-obrnuto').classList.remove('aktivan');
-      document.getElementById('label-ulaz').textContent = 'Unesi normalnu reč';
-    } else {
-      document.getElementById('btn-obrnuto').classList.add('aktivan');
-      document.getElementById('btn-normalno').classList.remove('aktivan');
-      document.getElementById('label-ulaz').textContent = 'Unesi utrovačku reč';
-    }
-  }
-
-  function napravljSlogove(rec) {
-    const samoglasnici = 'aeiouaeiou';
-    let slogovi = [];
-    let trenutni = '';
-
-    for (let i = 0; i < rec.length; i++) {
-      trenutni += rec[i];
-      if (samoglasnici.includes(rec[i])) {
-        slogovi.push(trenutni);
-        trenutni = '';
-      }
-    }
-
-    if (trenutni) {
-      if (slogovi.length > 0) {
-        slogovi[slogovi.length - 1] += trenutni;
-      } else {
-        slogovi.push(trenutni);
-      }
-    }
-
-    return slogovi;
-  }
-
-  function sifruj(rec) {
-    const log = [];
-    const slogovi = napravljSlogove(rec);
-
-    log.push(`Slogovi: <strong>${slogovi.join(' + ')}</strong>`);
-
-    if (slogovi.length < 2) {
-      return { rezultat: null, log, greska: 'Reč mora imati najmanje 2 sloga.' };
-    }
-
-    const prvi = slogovi[0];
-    const drugi = slogovi[1];
-    const ostatak = slogovi.slice(2).join('');
-
-    const utrovacki = 'u' + drugi + 'za' + prvi + (ostatak ? ostatak : '') + 'nje';
-
-    log.push(`Složi: <span class="dodaj">u</span> + <strong>${drugi}</strong> + <span class="dodaj">za</span> + <strong>${prvi}</strong>${ostatak ? ' + <strong>' + ostatak + '</strong>' : ''} + <span class="dodaj">nje</span>`);
-    log.push(`Rezultat: <strong>${utrovacki}</strong>`);
-
-    return { rezultat: utrovacki, log, greska: null };
-  }
-
-  function desifruj(rec) {
-    const log = [];
-
-    if (!rec.startsWith('u')) {
-      return { rezultat: null, log, greska: 'Utrovačka reč mora počinjati sa "u".' };
-    }
-    rec = rec.slice(1);
-    log.push(`Skinut <span class="brisi">u</span> sa početka → <strong>${rec}</strong>`);
-
-    if (!rec.endsWith('nje')) {
-      return { rezultat: null, log, greska: 'Utrovačka reč mora završavati sa "nje".' };
-    }
-    rec = rec.slice(0, -3);
-    log.push(`Skinut <span class="brisi">nje</span> sa kraja → <strong>${rec}</strong>`);
-
-    const idx = rec.indexOf('za');
-    if (idx === -1) {
-      return { rezultat: null, log, greska: 'Nema "za" u sredini.' };
-    }
-
-    const drugiSlog = rec.slice(0, idx);
-    const ostatak = rec.slice(idx + 2);
-
-    log.push(`Podeli na <span class="brisi">za</span>: drugi slog = <strong>${drugiSlog}</strong>, prvi slog = <strong>${ostatak}</strong>`);
-
-    const rezultat = ostatak + drugiSlog;
-    log.push(`Spoji u pravi redosled: <strong>${ostatak}</strong> + <strong>${drugiSlog}</strong> = <strong>${rezultat}</strong>`);
-
-    return { rezultat, log, greska: null };
-  }
-
-  function prevedi() {
-    const ulaz = document.getElementById('ulaz').value.trim().toLowerCase();
-    const rezultatEl = document.getElementById('rezultat');
-    const koraciEl = document.getElementById('koraci');
-    const greskaEl = document.getElementById('greska');
-
-    rezultatEl.textContent = '';
-    koraciEl.innerHTML = '';
-    greskaEl.textContent = '';
-
-    if (!ulaz) return;
-
-    const ishod = smer === 'normalno' ? sifruj(ulaz) : desifruj(ulaz);
-
-    if (ishod.greska) {
-      greskaEl.textContent = ishod.greska;
-      prikaziKorake(ishod.log);
-    } else {
-      rezultatEl.textContent = ishod.rezultat;
-    }
-  }
-
-  function prikaziKorake(log) {
-    const koraciEl = document.getElementById('koraci');
-    log.forEach((txt, i) => {
-      const d = document.createElement('div');
-      d.className = 'korak';
-      d.innerHTML = `<strong>Korak ${i + 1}:</strong> ` + txt;
-      koraciEl.appendChild(d);
-    });
-  }
-</script>
-
-</body>
-</html>
+<div class="traka">
+  <div class="traka-sadrzaj">
+    <span class="traka-item">KLUPA <span class="traka-tacka">✦</span></span>
+    <span class="traka-item">UPAZAKLUNJE <span class="traka-tacka">✦</span></span>
+    <span class="traka-item">DEDA <span class="traka-tacka">✦</span></span>
+    <span class="traka-item">UDAZADENJE <span class="traka-tacka">✦</span></sp
