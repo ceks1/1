@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prevodilac reči</title>
+  <title>Utrovački prevodilac</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -26,10 +26,31 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
 
-    h1 {
-      font-size: 22px;
+    h1 { font-size: 22px; margin-bottom: 0.5rem; color: #1a1a1a; }
+    p.opis { font-size: 13px; color: #888; margin-bottom: 1.5rem; }
+
+    .prekidac {
+      display: flex;
+      gap: 8px;
       margin-bottom: 1.5rem;
-      color: #1a1a1a;
+    }
+
+    .prekidac button {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #f7f7f7;
+      cursor: pointer;
+      font-size: 14px;
+      color: #555;
+      transition: all 0.2s;
+    }
+
+    .prekidac button.aktivan {
+      background: #1a1a1a;
+      color: white;
+      border-color: #1a1a1a;
     }
 
     .red {
@@ -60,11 +81,7 @@
 
     input[type="text"]:focus { border-color: #555; }
 
-    .strelica {
-      font-size: 24px;
-      color: #aaa;
-      padding-bottom: 10px;
-    }
+    .strelica { font-size: 24px; color: #aaa; padding-bottom: 10px; }
 
     .rezultat-box {
       width: 100%;
@@ -79,9 +96,7 @@
     }
 
     .greska { color: #cc3333; font-size: 14px; margin-bottom: 1rem; }
-
     .koraci { border-top: 1px solid #eee; padding-top: 1rem; }
-
     .koraci:empty { border-top: none; }
 
     .korak {
@@ -92,19 +107,25 @@
     }
 
     .korak:last-child { border-bottom: none; }
-
     .brisi { color: #cc3333; font-weight: bold; }
+    .dodaj { color: #228833; font-weight: bold; }
   </style>
 </head>
 <body>
 
 <div class="kartica">
-  <h1>Prevodilac reči</h1>
+  <h1>Utrovački prevodilac</h1>
+  <p class="opis">Utrovački jezik: <strong>deda</strong> → <strong>udazadenje</strong></p>
+
+  <div class="prekidac">
+    <button id="btn-normalno" class="aktivan" onclick="setSmer('normalno')">Normalno → Utrovački</button>
+    <button id="btn-obrnuto" onclick="setSmer('obrnuto')">Utrovački → Normalno</button>
+  </div>
 
   <div class="red">
     <div class="kolona">
-      <label>Unesi reč</label>
-      <input type="text" id="ulaz" placeholder="unesi rec" oninput="prevedi()" />
+      <label id="label-ulaz">Unesi reč</label>
+      <input type="text" id="ulaz" placeholder="" oninput="prevedi()" />
     </div>
     <div class="strelica">→</div>
     <div class="kolona">
@@ -118,99 +139,132 @@
 </div>
 
 <script>
-  function prebaciSlog(rec) {
-    const samoglasnici = 'aeiouAEIOU';
-    let zadnjiSlog = -1;
+  let smer = 'normalno';
 
-    for (let i = rec.length - 1; i >= 0; i--) {
+  function setSmer(novi) {
+    smer = novi;
+    document.getElementById('ulaz').value = '';
+    document.getElementById('rezultat').textContent = '';
+    document.getElementById('koraci').innerHTML = '';
+    document.getElementById('greska').textContent = '';
+
+    if (smer === 'normalno') {
+      document.getElementById('btn-normalno').classList.add('aktivan');
+      document.getElementById('btn-obrnuto').classList.remove('aktivan');
+      document.getElementById('label-ulaz').textContent = 'Unesi normalnu reč';
+    } else {
+      document.getElementById('btn-obrnuto').classList.add('aktivan');
+      document.getElementById('btn-normalno').classList.remove('aktivan');
+      document.getElementById('label-ulaz').textContent = 'Unesi utrovačku reč';
+    }
+  }
+
+  function napravljSlogove(rec) {
+    const samoglasnici = 'aeiouaeiou';
+    let slogovi = [];
+    let trenutni = '';
+
+    for (let i = 0; i < rec.length; i++) {
+      trenutni += rec[i];
       if (samoglasnici.includes(rec[i])) {
-        zadnjiSlog = i;
-        break;
+        slogovi.push(trenutni);
+        trenutni = '';
       }
     }
 
-    if (zadnjiSlog === -1) return rec;
-
-    let pocetakSloga = zadnjiSlog;
-    while (pocetakSloga > 0 && !samoglasnici.includes(rec[pocetakSloga - 1])) {
-      pocetakSloga--;
+    if (trenutni) {
+      if (slogovi.length > 0) {
+        slogovi[slogovi.length - 1] += trenutni;
+      } else {
+        slogovi.push(trenutni);
+      }
     }
 
-    const slog = rec.slice(pocetakSloga);
-    const ostatak = rec.slice(0, pocetakSloga);
-    return slog + ostatak;
+    return slogovi;
+  }
+
+  function sifruj(rec) {
+    const log = [];
+    const slogovi = napravljSlogove(rec);
+
+    log.push(`Slogovi: <strong>${slogovi.join(' + ')}</strong>`);
+
+    if (slogovi.length < 2) {
+      return { rezultat: null, log, greska: 'Reč mora imati najmanje 2 sloga.' };
+    }
+
+    const prvi = slogovi[0];
+    const drugi = slogovi[1];
+    const ostatak = slogovi.slice(2).join('');
+
+    const utrovacki = 'u' + drugi + 'za' + prvi + (ostatak ? ostatak : '') + 'nje';
+
+    log.push(`Složi: <span class="dodaj">u</span> + <strong>${drugi}</strong> + <span class="dodaj">za</span> + <strong>${prvi}</strong>${ostatak ? ' + <strong>' + ostatak + '</strong>' : ''} + <span class="dodaj">nje</span>`);
+    log.push(`Rezultat: <strong>${utrovacki}</strong>`);
+
+    return { rezultat: utrovacki, log, greska: null };
+  }
+
+  function desifruj(rec) {
+    const log = [];
+
+    if (!rec.startsWith('u')) {
+      return { rezultat: null, log, greska: 'Utrovačka reč mora počinjati sa "u".' };
+    }
+    rec = rec.slice(1);
+    log.push(`Skinut <span class="brisi">u</span> sa početka → <strong>${rec}</strong>`);
+
+    if (!rec.endsWith('nje')) {
+      return { rezultat: null, log, greska: 'Utrovačka reč mora završavati sa "nje".' };
+    }
+    rec = rec.slice(0, -3);
+    log.push(`Skinut <span class="brisi">nje</span> sa kraja → <strong>${rec}</strong>`);
+
+    const idx = rec.indexOf('za');
+    if (idx === -1) {
+      return { rezultat: null, log, greska: 'Nema "za" u sredini.' };
+    }
+
+    const drugiSlog = rec.slice(0, idx);
+    const ostatak = rec.slice(idx + 2);
+
+    log.push(`Podeli na <span class="brisi">za</span>: drugi slog = <strong>${drugiSlog}</strong>, prvi slog = <strong>${ostatak}</strong>`);
+
+    const rezultat = ostatak + drugiSlog;
+    log.push(`Spoji u pravi redosled: <strong>${ostatak}</strong> + <strong>${drugiSlog}</strong> = <strong>${rezultat}</strong>`);
+
+    return { rezultat, log, greska: null };
   }
 
   function prevedi() {
     const ulaz = document.getElementById('ulaz').value.trim().toLowerCase();
-    const rezultat = document.getElementById('rezultat');
-    const koraci = document.getElementById('koraci');
-    const greska = document.getElementById('greska');
+    const rezultatEl = document.getElementById('rezultat');
+    const koraciEl = document.getElementById('koraci');
+    const greskaEl = document.getElementById('greska');
 
-    rezultat.textContent = '';
-    koraci.innerHTML = '';
-    greska.textContent = '';
+    rezultatEl.textContent = '';
+    koraciEl.innerHTML = '';
+    greskaEl.textContent = '';
 
     if (!ulaz) return;
 
-    let rec = ulaz;
-    let log = [];
-    let gotovo = false;
+    const ishod = smer === 'normalno' ? sifruj(ulaz) : desifruj(ulaz);
 
-    // Korak 1: skini "u" sa početka
-    if (rec.startsWith('u')) {
-      const pre = rec;
-      rec = rec.slice(1);
-      log.push(`Skinut <span class="brisi">u</span> sa početka: ${pre} → <strong>${rec}</strong>`);
+    if (ishod.greska) {
+      greskaEl.textContent = ishod.greska;
+      prikaziKorake(ishod.log);
     } else {
-      greska.textContent = 'Reč ne počinje sa "u".';
-      prikaziKorake(log);
-      return;
-    }
-
-    // Korak 2: pronađi i briši "za" iz sredine
-    const idx = rec.indexOf('za');
-    if (idx !== -1) {
-      const pre = rec;
-      rec = rec.slice(0, idx) + rec.slice(idx + 2);
-      log.push(`Obrisano <span class="brisi">za</span> iz sredine: ${pre} → <strong>${rec}</strong>`);
-    } else {
-      greska.textContent = 'Reč ne sadrži "za" u sredini.';
-      prikaziKorake(log);
-      return;
-    }
-
-    // Korak 3: skini "nje" sa kraja
-    if (rec.endsWith('nje')) {
-      const pre = rec;
-      rec = rec.slice(0, -3);
-      log.push(`Skinut <span class="brisi">nje</span> sa kraja: ${pre} → <strong>${rec}</strong>`);
-    } else {
-      greska.textContent = 'Reč ne završava sa "nje".';
-      prikaziKorake(log);
-      return;
-    }
-
-    // Korak 4: prebaci zadnji slog na početak
-    const finalnaRec = prebaciSlog(rec);
-    log.push(`Zadnji slog premešten na početak: <strong>${rec}</strong> → <strong>${finalnaRec}</strong>`);
-
-    gotovo = true;
-    rezultat.textContent = finalnaRec;
-
-    // Koraci se prikazuju samo dok se kuca, ne i kada je rezultat gotov
-    if (!gotovo) {
-      prikaziKorake(log);
+      rezultatEl.textContent = ishod.rezultat;
     }
   }
 
   function prikaziKorake(log) {
-    const koraci = document.getElementById('koraci');
+    const koraciEl = document.getElementById('koraci');
     log.forEach((txt, i) => {
       const d = document.createElement('div');
       d.className = 'korak';
       d.innerHTML = `<strong>Korak ${i + 1}:</strong> ` + txt;
-      koraci.appendChild(d);
+      koraciEl.appendChild(d);
     });
   }
 </script>
