@@ -15,13 +15,22 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-scroll-behavior: smooth;
+      min-height: 100%;
+      height: auto;
+      overflow-y: auto;
+    }
 
     body {
       background: var(--crna);
       color: var(--bela);
       font-family: 'Syne', sans-serif;
       overflow-x: hidden;
+      overflow-y: auto;
+      min-height: 100%;
       cursor: none;
     }
 
@@ -67,6 +76,7 @@
       letter-spacing: 2px;
       text-transform: uppercase;
       transition: color 0.2s;
+      cursor: none;
     }
     .nav-link:hover { color: var(--zuta); }
 
@@ -424,7 +434,7 @@
 
 <nav>
   <div class="nav-logo">Utro<span>vački</span></div>
-  <a href="#prevodilac" class="nav-link">↓ Probaj</a>
+  <a onclick="document.getElementById('prevodilac').scrollIntoView({behavior:'smooth'})" class="nav-link">↓ Probaj</a>
 </nav>
 
 <section class="hero">
@@ -456,4 +466,176 @@
     <span class="traka-item">KLUPA <span class="traka-tacka">✦</span></span>
     <span class="traka-item">UPAZAKLUNJE <span class="traka-tacka">✦</span></span>
     <span class="traka-item">DEDA <span class="traka-tacka">✦</span></span>
-    <span class="traka-item">UDAZADENJE <span class="traka-tacka">✦</span></sp
+    <span class="traka-item">UDAZADENJE <span class="traka-tacka">✦</span></span>
+    <span class="traka-item">MAMA <span class="traka-tacka">✦</span></span>
+    <span class="traka-item">UMAZAMANJE <span class="traka-tacka">✦</span></span>
+    <span class="traka-item">KLUPA <span class="traka-tacka">✦</span></span>
+    <span class="traka-item">UPAZAKLUNJE <span class="traka-tacka">✦</span></span>
+    <span class="traka-item">DEDA <span class="traka-tacka">✦</span></span>
+    <span class="traka-item">UDAZADENJE <span class="traka-tacka">✦</span></span>
+    <span class="traka-item">MAMA <span class="traka-tacka">✦</span></span>
+    <span class="traka-item">UMAZAMANJE <span class="traka-tacka">✦</span></span>
+  </div>
+</div>
+
+<section class="sekcija" id="kako-radi">
+  <div class="sekcija-tag">// Kako radi</div>
+  <h2 class="sekcija-naslov reveal">FORMULA<br><span style="color:var(--zuta)">JEZIKA</span></h2>
+  <div class="koraci-grid reveal">
+    <div class="korak-kartica">
+      <div class="korak-broj">1</div>
+      <div class="korak-ikona">✂️</div>
+      <div class="korak-naslov">Razdvoji slogove</div>
+      <p class="korak-tekst">Reč se deli na slogove prema samoglasnicima.</p>
+      <div class="korak-formula">de · da</div>
+    </div>
+    <div class="korak-kartica">
+      <div class="korak-broj">2</div>
+      <div class="korak-ikona">🔀</div>
+      <div class="korak-naslov">Zameni redosled</div>
+      <p class="korak-tekst">Drugi slog ide na prvo mesto, prvi slog ide na drugo.</p>
+      <div class="korak-formula">da · de</div>
+    </div>
+    <div class="korak-kartica">
+      <div class="korak-broj">3</div>
+      <div class="korak-ikona">➕</div>
+      <div class="korak-naslov">Dodaj masku</div>
+      <p class="korak-tekst">Stavlja se <strong style="color:var(--zuta)">U</strong> na početak, <strong style="color:var(--zuta)">ZA</strong> u sredinu i <strong style="color:var(--zuta)">NJE</strong> na kraj.</p>
+      <div class="korak-formula">u + da + za + de + nje</div>
+    </div>
+    <div class="korak-kartica">
+      <div class="korak-broj">4</div>
+      <div class="korak-ikona">🎉</div>
+      <div class="korak-naslov">Gotovo!</div>
+      <p class="korak-tekst">Reč je šifrovana. Niko ne zna šta govoriš — osim tebe.</p>
+      <div class="korak-formula">udazadenje</div>
+    </div>
+  </div>
+</section>
+
+<section class="prevodilac-sekcija" id="prevodilac">
+  <div class="prevodilac-wrapper">
+    <div class="sekcija-tag">// Prevodilac</div>
+    <h2 class="sekcija-naslov reveal" style="margin-bottom:2rem">PROBAJ<br><span style="color:var(--zuta)">SAM</span></h2>
+
+    <div class="prekidac">
+      <button id="btn-normalno" class="aktivan" onclick="setSmer('normalno')">Normalno → Utrovački</button>
+      <button id="btn-obrnuto" onclick="setSmer('obrnuto')">Utrovački → Normalno</button>
+    </div>
+
+    <div class="red">
+      <div class="kolona">
+        <label id="label-ulaz">Unesi normalnu reč</label>
+        <input type="text" id="ulaz" placeholder="" oninput="prevedi()" />
+      </div>
+      <div class="strelica">→</div>
+      <div class="kolona">
+        <label>Rezultat</label>
+        <div class="rezultat-box" id="rezultat"></div>
+      </div>
+    </div>
+
+    <div class="greska" id="greska"></div>
+    <div class="koraci-prikaz" id="koraci"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Utrovački</div>
+  <div class="footer-tekst">Tajni jezik srpskih školskih hodnika · 2024</div>
+</footer>
+
+<script>
+  const kursor = document.getElementById('kursor');
+  document.addEventListener('mousemove', e => {
+    kursor.style.left = e.clientX + 'px';
+    kursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, input').forEach(el => {
+    el.addEventListener('mouseenter', () => kursor.classList.add('veliki'));
+    el.addEventListener('mouseleave', () => kursor.classList.remove('veliki'));
+  });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vidljivo'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  let smer = 'normalno';
+
+  function setSmer(novi) {
+    smer = novi;
+    document.getElementById('ulaz').value = '';
+    document.getElementById('rezultat').textContent = '';
+    document.getElementById('koraci').innerHTML = '';
+    document.getElementById('greska').textContent = '';
+    document.getElementById('btn-normalno').classList.toggle('aktivan', smer === 'normalno');
+    document.getElementById('btn-obrnuto').classList.toggle('aktivan', smer === 'obrnuto');
+    document.getElementById('label-ulaz').textContent = smer === 'normalno' ? 'Unesi normalnu reč' : 'Unesi utrovačku reč';
+  }
+
+  function napravljSlogove(rec) {
+    const samoglasnici = 'aeiouaeiou';
+    let slogovi = [], trenutni = '';
+    for (let i = 0; i < rec.length; i++) {
+      trenutni += rec[i];
+      if (samoglasnici.includes(rec[i])) { slogovi.push(trenutni); trenutni = ''; }
+    }
+    if (trenutni) {
+      if (slogovi.length > 0) slogovi[slogovi.length - 1] += trenutni;
+      else slogovi.push(trenutni);
+    }
+    return slogovi;
+  }
+
+  function sifruj(rec) {
+    const log = [];
+    const slogovi = napravljSlogove(rec);
+    log.push(`Slogovi: <strong>${slogovi.join(' · ')}</strong>`);
+    if (slogovi.length < 2) return { rezultat: null, log, greska: 'Reč mora imati najmanje 2 sloga.' };
+    const prvi = slogovi[0], drugi = slogovi[1], ostatak = slogovi.slice(2).join('');
+    const utrovacki = 'u' + drugi + 'za' + prvi + (ostatak || '') + 'nje';
+    log.push(`Složi: <span class="dodaj">u</span> + <strong>${drugi}</strong> + <span class="dodaj">za</span> + <strong>${prvi}</strong>${ostatak ? ' + <strong>' + ostatak + '</strong>' : ''} + <span class="dodaj">nje</span>`);
+    return { rezultat: utrovacki, log, greska: null };
+  }
+
+  function desifruj(rec) {
+    const log = [];
+    if (!rec.startsWith('u')) return { rezultat: null, log, greska: 'Utrovačka reč mora počinjati sa "u".' };
+    rec = rec.slice(1);
+    log.push(`Skinut <span class="brisi">u</span> sa početka → <strong>${rec}</strong>`);
+    if (!rec.endsWith('nje')) return { rezultat: null, log, greska: 'Utrovačka reč mora završavati sa "nje".' };
+    rec = rec.slice(0, -3);
+    log.push(`Skinut <span class="brisi">nje</span> sa kraja → <strong>${rec}</strong>`);
+    const idx = rec.indexOf('za');
+    if (idx === -1) return { rezultat: null, log, greska: 'Nema "za" u sredini.' };
+    const drugiSlog = rec.slice(0, idx), ostatak = rec.slice(idx + 2);
+    log.push(`Podeli na <span class="brisi">za</span>: <strong>${drugiSlog}</strong> + <strong>${ostatak}</strong>`);
+    const rezultat = ostatak + drugiSlog;
+    log.push(`Spoji: <strong>${ostatak}</strong> + <strong>${drugiSlog}</strong> = <strong>${rezultat}</strong>`);
+    return { rezultat, log, greska: null };
+  }
+
+  function prevedi() {
+    const ulaz = document.getElementById('ulaz').value.trim().toLowerCase();
+    const rezultatEl = document.getElementById('rezultat');
+    const koraciEl = document.getElementById('koraci');
+    const greskaEl = document.getElementById('greska');
+    rezultatEl.textContent = ''; koraciEl.innerHTML = ''; greskaEl.textContent = '';
+    if (!ulaz) return;
+    const ishod = smer === 'normalno' ? sifruj(ulaz) : desifruj(ulaz);
+    if (ishod.greska) {
+      greskaEl.textContent = ishod.greska;
+      ishod.log.forEach((txt, i) => {
+        const d = document.createElement('div');
+        d.className = 'korak-red';
+        d.innerHTML = `<strong>${i + 1}.</strong> ` + txt;
+        koraciEl.appendChild(d);
+      });
+    } else {
+      rezultatEl.textContent = ishod.rezultat;
+    }
+  }
+</script>
+</body>
+</html>
