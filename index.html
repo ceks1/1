@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prevodilac reči</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .kartica {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 560px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 1.5rem;
+      color: #1a1a1a;
+    }
+
+    .red {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+      margin-bottom: 1.5rem;
+    }
+
+    .kolona { flex: 1; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      font-size: 18px;
+      padding: 10px 14px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus { border-color: #555; }
+
+    .strelica {
+      font-size: 24px;
+      color: #aaa;
+      padding-bottom: 10px;
+    }
+
+    .rezultat-box {
+      width: 100%;
+      font-size: 22px;
+      font-weight: bold;
+      padding: 10px 14px;
+      background: #f7f7f7;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      min-height: 50px;
+      color: #1a1a1a;
+    }
+
+    .greska { color: #cc3333; font-size: 14px; margin-bottom: 1rem; }
+
+    .koraci { border-top: 1px solid #eee; padding-top: 1rem; }
+
+    .koraci:empty { border-top: none; }
+
+    .korak {
+      font-size: 13px;
+      color: #555;
+      padding: 5px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .korak:last-child { border-bottom: none; }
+
+    .brisi { color: #cc3333; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div class="kartica">
+  <h1>Prevodilac reči</h1>
+
+  <div class="red">
+    <div class="kolona">
+      <label>Unesi reč</label>
+      <input type="text" id="ulaz" placeholder="unesi rec" oninput="prevedi()" />
+    </div>
+    <div class="strelica">→</div>
+    <div class="kolona">
+      <label>Rezultat</label>
+      <div class="rezultat-box" id="rezultat"></div>
+    </div>
+  </div>
+
+  <div class="greska" id="greska"></div>
+  <div class="koraci" id="koraci"></div>
+</div>
+
+<script>
+  function prebaciSlog(rec) {
+    const samoglasnici = 'aeiouAEIOU';
+    let zadnjiSlog = -1;
+
+    for (let i = rec.length - 1; i >= 0; i--) {
+      if (samoglasnici.includes(rec[i])) {
+        zadnjiSlog = i;
+        break;
+      }
+    }
+
+    if (zadnjiSlog === -1) return rec;
+
+    let pocetakSloga = zadnjiSlog;
+    while (pocetakSloga > 0 && !samoglasnici.includes(rec[pocetakSloga - 1])) {
+      pocetakSloga--;
+    }
+
+    const slog = rec.slice(pocetakSloga);
+    const ostatak = rec.slice(0, pocetakSloga);
+    return slog + ostatak;
+  }
+
+  function prevedi() {
+    const ulaz = document.getElementById('ulaz').value.trim().toLowerCase();
+    const rezultat = document.getElementById('rezultat');
+    const koraci = document.getElementById('koraci');
+    const greska = document.getElementById('greska');
+
+    rezultat.textContent = '';
+    koraci.innerHTML = '';
+    greska.textContent = '';
+
+    if (!ulaz) return;
+
+    let rec = ulaz;
+    let log = [];
+    let gotovo = false;
+
+    // Korak 1: skini "u" sa početka
+    if (rec.startsWith('u')) {
+      const pre = rec;
+      rec = rec.slice(1);
+      log.push(`Skinut <span class="brisi">u</span> sa početka: ${pre} → <strong>${rec}</strong>`);
+    } else {
+      greska.textContent = 'Reč ne počinje sa "u".';
+      prikaziKorake(log);
+      return;
+    }
+
+    // Korak 2: pronađi i briši "za" iz sredine
+    const idx = rec.indexOf('za');
+    if (idx !== -1) {
+      const pre = rec;
+      rec = rec.slice(0, idx) + rec.slice(idx + 2);
+      log.push(`Obrisano <span class="brisi">za</span> iz sredine: ${pre} → <strong>${rec}</strong>`);
+    } else {
+      greska.textContent = 'Reč ne sadrži "za" u sredini.';
+      prikaziKorake(log);
+      return;
+    }
+
+    // Korak 3: skini "nje" sa kraja
+    if (rec.endsWith('nje')) {
+      const pre = rec;
+      rec = rec.slice(0, -3);
+      log.push(`Skinut <span class="brisi">nje</span> sa kraja: ${pre} → <strong>${rec}</strong>`);
+    } else {
+      greska.textContent = 'Reč ne završava sa "nje".';
+      prikaziKorake(log);
+      return;
+    }
+
+    // Korak 4: prebaci zadnji slog na početak
+    const finalnaRec = prebaciSlog(rec);
+    log.push(`Zadnji slog premešten na početak: <strong>${rec}</strong> → <strong>${finalnaRec}</strong>`);
+
+    gotovo = true;
+    rezultat.textContent = finalnaRec;
+
+    // Koraci se prikazuju samo dok se kuca, ne i kada je rezultat gotov
+    if (!gotovo) {
+      prikaziKorake(log);
+    }
+  }
+
+  function prikaziKorake(log) {
+    const koraci = document.getElementById('koraci');
+    log.forEach((txt, i) => {
+      const d = document.createElement('div');
+      d.className = 'korak';
+      d.innerHTML = `<strong>Korak ${i + 1}:</strong> ` + txt;
+      koraci.appendChild(d);
+    });
+  }
+</script>
+
+</body>
+</html>
