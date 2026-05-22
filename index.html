@@ -593,29 +593,36 @@
     const slogovi = napravljSlogove(rec);
     log.push(`Slogovi: <strong>${slogovi.join(' · ')}</strong>`);
     if (slogovi.length < 2) return { rezultat: null, log, greska: 'Reč mora imati najmanje 2 sloga.' };
-    const prvi = slogovi[0], drugi = slogovi[1], ostatak = slogovi.slice(2).join('');
-    const utrovacki = 'u' + drugi + 'za' + prvi + (ostatak || '') + 'nje';
-    log.push(`Složi: <span class="dodaj">u</span> + <strong>${drugi}</strong> + <span class="dodaj">za</span> + <strong>${prvi}</strong>${ostatak ? ' + <strong>' + ostatak + '</strong>' : ''} + <span class="dodaj">nje</span>`);
-    return { rezultat: utrovacki, log, greska: null };
-  }
 
-  function desifruj(rec) {
+    const prvi = slogovi[0];
+    const ostali = slogovi.slice(1).join('');
+    const utrovacki = 'u' + ostali + 'za' + prvi + 'nje';
+
+    log.push(`Složi: <span class="dodaj">u</span> + <strong>${ostali}</strong> + <span class="dodaj">za</span> + <strong>${prvi}</strong> + <span class="dodaj">nje</span>`);
+    return { rezultat: utrovacki, log, greska: null };
+}
+
+function desifruj(rec) {
     const log = [];
     if (!rec.startsWith('u')) return { rezultat: null, log, greska: 'Utrovačka reč mora počinjati sa "u".' };
     rec = rec.slice(1);
     log.push(`Skinut <span class="brisi">u</span> sa početka → <strong>${rec}</strong>`);
+
     if (!rec.endsWith('nje')) return { rezultat: null, log, greska: 'Utrovačka reč mora završavati sa "nje".' };
     rec = rec.slice(0, -3);
     log.push(`Skinut <span class="brisi">nje</span> sa kraja → <strong>${rec}</strong>`);
+
     const idx = rec.indexOf('za');
     if (idx === -1) return { rezultat: null, log, greska: 'Nema "za" u sredini.' };
-    const drugiSlog = rec.slice(0, idx), ostatak = rec.slice(idx + 2);
-    log.push(`Podeli na <span class="brisi">za</span>: <strong>${drugiSlog}</strong> + <strong>${ostatak}</strong>`);
-    const rezultat = ostatak + drugiSlog;
-    log.push(`Spoji: <strong>${ostatak}</strong> + <strong>${drugiSlog}</strong> = <strong>${rezultat}</strong>`);
-    return { rezultat, log, greska: null };
-  }
 
+    const ostaliSlogovi = rec.slice(0, idx);
+    const prviSlog = rec.slice(idx + 2);
+    log.push(`Podeli na <span class="brisi">za</span>: ostali slogovi = <strong>${ostaliSlogovi}</strong>, prvi slog = <strong>${prviSlog}</strong>`);
+
+    const rezultat = prviSlog + ostaliSlogovi;
+    log.push(`Spoji: <strong>${prviSlog}</strong> + <strong>${ostaliSlogovi}</strong> = <strong>${rezultat}</strong>`);
+    return { rezultat, log, greska: null };
+}
   function prevedi() {
     const ulaz = document.getElementById('ulaz').value.trim().toLowerCase();
     const rezultatEl = document.getElementById('rezultat');
