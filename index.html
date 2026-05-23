@@ -404,7 +404,15 @@
       color: var(--narandzasta);
       font-family: 'Space Mono', monospace;
       font-size: 0.75rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .greska-link a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--zuta);
+      cursor: none;
+      text-decoration: underline;
     }
 
     .koraci-prikaz { margin-top: 0.5rem; }
@@ -476,7 +484,7 @@
 </nav>
 
 <section class="hero">
-  <div class="hero-bg-text">/////Tajne reči</div>
+  <div class="hero-bg-text">/////TAJNI JEZIK</div>
   <div class="deco-linija">
     <span style="width:60px"></span>
     <span style="width:40px"></span>
@@ -484,14 +492,16 @@
     <span style="width:30px"></span>
     <span style="width:55px"></span>
   </div>
-  <div class="hero-tag">// Tajni jezik · Verzija 2.0 reči i rečenice</div>
+  <div class="hero-tag">// Tajni jezik · Verzija 1.0</div>
   <h1 class="hero-naslov">
     UTRO<span class="zuta">VAČ</span><span class="narandzasta">KI</span>
     <br>JE<span class="zuta">ZIK</span>
   </h1>
   <p class="hero-opis">
-    Tajni jezik koji je kružio među društvom — šifre koje su samo “upućeni” razumeli dok su komentarisali ribe, planove i priče koje ne idu javno.
-Sada je sve to prebačeno u digitalni svet. Upiši bilo koju reč i za sekund je pretvori u kod koji samo ekipa razume.
+    Tajni jezik koji je kružio među društvom — šifre koje su samo “upućeni” razumeli dok su komentarisali ribe, planove i priče koje ne idu javno. Sada je sve to prebačeno u digitalni svet. Upiši bilo koju reč i za sekund je pretvori u kod koji samo ekipa razume.
+
+Počni da prevodiš
+.
   </p>
   <div class="hero-cta">
     <a onclick="document.getElementById('prevodilac').scrollIntoView({behavior:'smooth'})" class="btn-glavni">Počni da prevodiš</a>
@@ -531,7 +541,7 @@ Sada je sve to prebačeno u digitalni svet. Upiši bilo koju reč i za sekund je
       <div class="korak-broj">2</div>
       <div class="korak-ikona">🔀</div>
       <div class="korak-naslov">Zameni redosled</div>
-      <p class="korak-tekst">Drugi i svaki naredni slog ide na prvo mesto, prvi slog ide na drugo.</p>
+      <p class="korak-tekst">Drugi slog ide na prvo mesto, prvi slog ide na drugo.</p>
       <div class="korak-formula">da · de</div>
     </div>
     <div class="korak-kartica">
@@ -556,7 +566,7 @@ Sada je sve to prebačeno u digitalni svet. Upiši bilo koju reč i za sekund je
 
     <!-- MODUL ZA REČ -->
     <div class="sekcija-tag">// Prevodilac reči</div>
-    <h2 class="sekcija-naslov reveal" style="margin-bottom:2rem">PREVEDI<br><span style="color:var(--zuta)">REČ</span></h2>
+    <h2 class="sekcija-naslov reveal" style="margin-bottom:2rem">PROBAJ<br><span style="color:var(--zuta)">SAM</span></h2>
 
     <div class="prekidac">
       <button id="btn-normalno" class="aktivan" onclick="setSmer('normalno')">Normalno → Utrovački</button>
@@ -570,12 +580,17 @@ Sada je sve to prebačeno u digitalni svet. Upiši bilo koju reč i za sekund je
       </div>
       <div class="strelica">→</div>
       <div class="kolona">
-        <label>Prevod</label>
+        <label>Rezultat</label>
         <div class="rezultat-box" id="rezultat"></div>
       </div>
     </div>
 
     <div class="greska" id="greska"></div>
+    <div class="greska-link" id="greska-link" style="display:none; margin-bottom:1rem;">
+      <a onclick="document.getElementById('ulaz-recenica').scrollIntoView({behavior:'smooth'}); document.getElementById('ulaz-recenica').focus();">
+        → Idi na prevodilac rečenica
+      </a>
+    </div>
     <div class="koraci-prikaz" id="koraci"></div>
 
     <!-- RAZDVOJNICA -->
@@ -583,7 +598,7 @@ Sada je sve to prebačeno u digitalni svet. Upiši bilo koju reč i za sekund je
 
     <!-- MODUL ZA REČENICU -->
     <div class="sekcija-tag">// Prevodilac rečenica</div>
-    <h2 class="sekcija-naslov reveal" style="margin-bottom:2rem">PREVEDI CELU<br><span style="color:var(--zuta)">REČENICU</span></h2>
+    <h2 class="sekcija-naslov reveal" style="margin-bottom:2rem">CELA<br><span style="color:var(--zuta)">REČENICA</span></h2>
 
     <div class="prekidac">
       <button id="btn-rec-normalno" class="aktivan" onclick="setRecSmer('normalno')">Normalno → Utrovački</button>
@@ -592,11 +607,11 @@ Sada je sve to prebačeno u digitalni svet. Upiši bilo koju reč i za sekund je
 
     <div style="margin-bottom:1rem;">
       <label style="display:block; font-family:'Space Mono',monospace; font-size:0.65rem; letter-spacing:3px; text-transform:uppercase; color:rgba(245,240,232,0.4); margin-bottom:8px;" id="label-recenica">Unesi normalnu rečenicu</label>
-      <textarea id="ulaz-recenica" placeholder="unesi rečenicu" oninput="prevediRecenicu()"></textarea>
+      <textarea id="ulaz-recenica" placeholder="kako da napravim..." oninput="prevediRecenicu()"></textarea>
     </div>
 
     <div>
-      <label style="display:block; font-family:'Space Mono',monospace; font-size:0.65rem; letter-spacing:3px; text-transform:uppercase; color:rgba(245,240,232,0.4); margin-bottom:8px;">Prevod</label>
+      <label style="display:block; font-family:'Space Mono',monospace; font-size:0.65rem; letter-spacing:3px; text-transform:uppercase; color:rgba(245,240,232,0.4); margin-bottom:8px;">Rezultat</label>
       <div class="rezultat-box-recenica" id="rezultat-recenica"></div>
     </div>
 
@@ -605,7 +620,7 @@ Sada je sve to prebačeno u digitalni svet. Upiši bilo koju reč i za sekund je
 
 <footer>
   <div class="footer-logo">Utrovački</div>
-  <div class="footer-tekst">Čeksov prevoliac na utrovački · 2026</div>
+  <div class="footer-tekst">Čeksov prevodilac na utrovački · 2026</div>
 </footer>
 
 <script>
@@ -680,6 +695,7 @@ Sada je sve to prebačeno u digitalni svet. Upiši bilo koju reč i za sekund je
     document.getElementById('rezultat').textContent = '';
     document.getElementById('koraci').innerHTML = '';
     document.getElementById('greska').textContent = '';
+    document.getElementById('greska-link').style.display = 'none';
     document.getElementById('btn-normalno').classList.toggle('aktivan', smer === 'normalno');
     document.getElementById('btn-obrnuto').classList.toggle('aktivan', smer === 'obrnuto');
     document.getElementById('label-ulaz').textContent = smer === 'normalno' ? 'Unesi normalnu reč' : 'Unesi utrovačku reč';
@@ -690,8 +706,22 @@ Sada je sve to prebačeno u digitalni svet. Upiši bilo koju reč i za sekund je
     const rezultatEl = document.getElementById('rezultat');
     const koraciEl = document.getElementById('koraci');
     const greskaEl = document.getElementById('greska');
-    rezultatEl.textContent = ''; koraciEl.innerHTML = ''; greskaEl.textContent = '';
+    const greskaLink = document.getElementById('greska-link');
+
+    rezultatEl.textContent = '';
+    koraciEl.innerHTML = '';
+    greskaEl.textContent = '';
+    greskaLink.style.display = 'none';
+
     if (!ulaz) return;
+
+    // Proveri da li ima razmak
+    if (ulaz.includes(' ')) {
+      greskaEl.textContent = 'Ovde se prevodi samo jedna reč. Za rečenice koristi prevodilac ispod.';
+      greskaLink.style.display = 'block';
+      return;
+    }
+
     const ishod = smer === 'normalno' ? sifruj(ulaz) : desifruj(ulaz);
     if (ishod.greska) {
       greskaEl.textContent = ishod.greska;
@@ -730,11 +760,8 @@ Sada je sve to prebačeno u digitalni svet. Upiši bilo koju reč i za sekund je
       const cistaRec = rec.toLowerCase().replace(/[^a-zšđčćž]/gi, '');
       const interpunkcija = rec.replace(/[a-zšđčćž]/gi, '');
       if (!cistaRec) return rec;
-
-      // Jednoslozne reci ostaju kakve jesu
       const slogovi = napravljSlogove(cistaRec);
       if (slogovi.length < 2) return rec;
-
       if (recSmer === 'normalno') {
         const ishod = sifruj(cistaRec);
         return ishod.rezultat ? ishod.rezultat + interpunkcija : rec;
