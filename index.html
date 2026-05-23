@@ -31,10 +31,16 @@
       overflow-x: hidden;
       overflow-y: auto;
       min-height: 100%;
-      cursor: none;
+    }
+
+    /* Kursor samo na desktop */
+    @media (hover: hover) and (pointer: fine) {
+      body { cursor: none; }
+      .kursor { display: block; }
     }
 
     .kursor {
+      display: none;
       width: 20px; height: 20px;
       background: var(--zuta);
       border-radius: 50%;
@@ -76,7 +82,6 @@
       letter-spacing: 2px;
       text-transform: uppercase;
       transition: color 0.2s;
-      cursor: none;
     }
     .nav-link:hover { color: var(--zuta); }
 
@@ -137,6 +142,7 @@
       display: flex;
       gap: 1rem;
       align-items: center;
+      flex-wrap: wrap;
       animation: fadeUp 0.8s 0.3s ease both;
     }
 
@@ -148,7 +154,7 @@
       letter-spacing: 3px;
       padding: 1rem 2.5rem;
       border: none;
-      cursor: none;
+      cursor: pointer;
       text-decoration: none;
       display: inline-block;
       transition: transform 0.2s, background 0.2s;
@@ -300,6 +306,7 @@
       margin-bottom: 2rem;
       border: 1px solid rgba(255,255,255,0.15);
       overflow: hidden;
+      border-radius: 4px;
     }
 
     .prekidac button {
@@ -307,7 +314,7 @@
       padding: 0.9rem;
       border: none;
       background: transparent;
-      cursor: none;
+      cursor: pointer;
       font-family: 'Bebas Neue', sans-serif;
       font-size: 1rem;
       letter-spacing: 2px;
@@ -320,8 +327,8 @@
       display: grid;
       grid-template-columns: 1fr auto 1fr;
       gap: 1rem;
-      align-items: end;
-      margin-bottom: 1.5rem;
+      align-items: start;
+      margin-bottom: 1rem;
     }
 
     .kolona label {
@@ -336,60 +343,76 @@
 
     input[type="text"] {
       width: 100%;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 6px;
       color: var(--bela);
       font-family: 'Space Mono', monospace;
       font-size: 1.4rem;
       padding: 1rem 1.2rem;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
       caret-color: var(--zuta);
     }
-    input[type="text"]:focus { border-color: var(--zuta); }
+    input[type="text"]:focus {
+      border-color: var(--zuta);
+      box-shadow: 0 0 0 3px rgba(255,224,61,0.08);
+    }
     input[type="text"]::placeholder { color: rgba(245,240,232,0.2); }
 
     textarea {
       width: 100%;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 6px;
       color: var(--bela);
       font-family: 'Space Mono', monospace;
       font-size: 1rem;
       padding: 1rem 1.2rem;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
       caret-color: var(--zuta);
       resize: vertical;
       min-height: 110px;
       line-height: 1.7;
     }
-    textarea:focus { border-color: var(--zuta); }
+    textarea:focus {
+      border-color: var(--zuta);
+      box-shadow: 0 0 0 3px rgba(255,224,61,0.08);
+    }
     textarea::placeholder { color: rgba(245,240,232,0.2); }
 
     .strelica {
       font-size: 1.5rem;
       color: var(--narandzasta);
-      padding-bottom: 1rem;
+      padding-top: 2rem;
       text-align: center;
     }
 
+    /* REZULTAT BOXOVI */
     .rezultat-box {
       width: 100%;
-      background: rgba(255,224,61,0.05);
-      border: 1px solid rgba(255,224,61,0.2);
+      background: rgba(255,224,61,0.04);
+      border: 1px solid rgba(255,224,61,0.15);
+      border-radius: 6px;
       color: var(--zuta);
       font-family: 'Bebas Neue', sans-serif;
       font-size: 2rem;
       letter-spacing: 2px;
       padding: 1rem 1.2rem;
       min-height: 68px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .rezultat-box.ima-tekst {
+      border-color: rgba(255,224,61,0.4);
+      box-shadow: 0 0 20px rgba(255,224,61,0.06);
     }
 
     .rezultat-box-recenica {
       width: 100%;
-      background: rgba(255,224,61,0.05);
-      border: 1px solid rgba(255,224,61,0.2);
+      background: rgba(255,224,61,0.04);
+      border: 1px solid rgba(255,224,61,0.15);
+      border-radius: 6px;
       color: var(--zuta);
       font-family: 'Space Mono', monospace;
       font-size: 1rem;
@@ -398,6 +421,11 @@
       min-height: 110px;
       line-height: 1.7;
       word-break: break-word;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .rezultat-box-recenica.ima-tekst {
+      border-color: rgba(255,224,61,0.4);
+      box-shadow: 0 0 20px rgba(255,224,61,0.06);
     }
 
     .greska {
@@ -405,17 +433,18 @@
       font-family: 'Space Mono', monospace;
       font-size: 0.75rem;
       margin-bottom: 0.5rem;
+      margin-top: 0.5rem;
     }
 
     .greska-link a {
       font-family: 'Space Mono', monospace;
       font-size: 0.75rem;
       color: var(--zuta);
-      cursor: none;
+      cursor: pointer;
       text-decoration: underline;
     }
 
-    .koraci-prikaz { margin-top: 0.5rem; }
+    .koraci-prikaz { margin-top: 0.5rem; margin-bottom: 1rem; }
 
     .korak-red {
       font-family: 'Space Mono', monospace;
@@ -427,6 +456,34 @@
     .korak-red:last-child { border-bottom: none; }
     .brisi { color: #ff6b6b; }
     .dodaj { color: #69db7c; }
+
+    /* DUGMICI */
+    .akcija-dugmici {
+      display: none;
+      gap: 8px;
+      margin-top: 0.6rem;
+    }
+    .akcija-dugmici.vidljiva { display: flex; }
+
+    .btn-akcija {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 7px 14px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 4px;
+      background: transparent;
+      color: rgba(245,240,232,0.5);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-akcija:hover { border-color: var(--zuta); color: var(--zuta); }
+    .btn-akcija.kopirano { border-color: #69db7c; color: #69db7c; }
+    .btn-akcija.obrisi:hover { border-color: #ff6b6b; color: #ff6b6b; }
 
     footer {
       border-top: 1px solid rgba(255,255,255,0.08);
@@ -470,7 +527,7 @@
       footer { flex-direction: column; gap: 1rem; text-align: center; }
       .deco-linija { display: none; }
       .red { grid-template-columns: 1fr; }
-      .strelica { transform: rotate(90deg); }
+      .strelica { padding-top: 0; padding-bottom: 0.5rem; transform: rotate(90deg); }
     }
   </style>
 </head>
@@ -498,10 +555,7 @@
     <br>JE<span class="zuta">ZIK</span>
   </h1>
   <p class="hero-opis">
-    Tajni jezik koji je kružio među društvom — šifre koje su samo “upućeni” razumeli dok su komentarisali ribe, planove i priče koje ne idu javno. Sada je sve to prebačeno u digitalni svet. Upiši bilo koju reč i za sekund je pretvori u kod koji samo ekipa razume.
-
-Počni da prevodiš
-.
+    Tajni jezik koji je kružio među društvom — šifre koje su samo "upućeni" razumeli dok su komentarisali ribe, planove i priče koje ne idu javno. Sada je sve to prebačeno u digitalni svet. Upiši bilo koju reč i za sekund je pretvori u kod koji samo ekipa razume.
   </p>
   <div class="hero-cta">
     <a onclick="document.getElementById('prevodilac').scrollIntoView({behavior:'smooth'})" class="btn-glavni">Počni da prevodiš</a>
@@ -511,18 +565,18 @@ Počni da prevodiš
 
 <div class="traka">
   <div class="traka-sadrzaj">
-    <span class="traka-item">KLUPA <span class="traka-tacka">✦</span></span>
-    <span class="traka-item">UPAZAKLUNJE <span class="traka-tacka">✦</span></span>
-    <span class="traka-item">DEDA <span class="traka-tacka">✦</span></span>
-    <span class="traka-item">UDAZADENJE <span class="traka-tacka">✦</span></span>
-    <span class="traka-item">MAMA <span class="traka-tacka">✦</span></span>
-    <span class="traka-item">UMAZAMANJE <span class="traka-tacka">✦</span></span>
-    <span class="traka-item">KLUPA <span class="traka-tacka">✦</span></span>
-    <span class="traka-item">UPAZAKLUNJE <span class="traka-tacka">✦</span></span>
-    <span class="traka-item">DEDA <span class="traka-tacka">✦</span></span>
-    <span class="traka-item">UDAZADENJE <span class="traka-tacka">✦</span></span>
-    <span class="traka-item">MAMA <span class="traka-tacka">✦</span></span>
-    <span class="traka-item">UMAZAMANJE <span class="traka-tacka">✦</span></span>
+    <span class="traka-item">KLUPA<span class="traka-tacka">✦</span></span>
+    <span class="traka-item">UPAZAKLUNJE<span class="traka-tacka">✦</span></span>
+    <span class="traka-item">ŠIFRA<span class="traka-tacka">✦</span></span>
+    <span class="traka-item">UFRAZAŠINJE<span class="traka-tacka">✦</span></span>
+    <span class="traka-item">DRUŠTVO<span class="traka-tacka">✦</span></span>
+    <span class="traka-item">UŠTVOZADRUNJE<span class="traka-tacka">✦</span></span>
+    <span class="traka-item">PREVODILAC<span class="traka-tacka">✦</span></span>
+    <span class="traka-item">UVODILACZAPRENJE<span class="traka-tacka">✦</span></span>
+    <span class="traka-item">REZULTAT<span class="traka-tacka">✦</span></span>
+    <span class="traka-item">UZULTATZARENJE<span class="traka-tacka">✦</span></span>
+    <span class="traka-item">TAJNO<span class="traka-tacka">✦</span></span>
+    <span class="traka-item">UJNOZATANJE<span class="traka-tacka">✦</span></span>
   </div>
 </div>
 
@@ -566,7 +620,7 @@ Počni da prevodiš
 
     <!-- MODUL ZA REČ -->
     <div class="sekcija-tag">// Prevodilac reči</div>
-    <h2 class="sekcija-naslov reveal" style="margin-bottom:2rem">PROBAJ<br><span style="color:var(--zuta)">SAM</span></h2>
+    <h2 class="sekcija-naslov reveal" style="margin-bottom:2rem">PREVEDI<br><span style="color:var(--zuta)">REČ</span></h2>
 
     <div class="prekidac">
       <button id="btn-normalno" class="aktivan" onclick="setSmer('normalno')">Normalno → Utrovački</button>
@@ -582,6 +636,10 @@ Počni da prevodiš
       <div class="kolona">
         <label>Rezultat</label>
         <div class="rezultat-box" id="rezultat"></div>
+        <div class="akcija-dugmici" id="dugmici-rec">
+          <button class="btn-akcija" id="btn-kopiraj-rec" onclick="kopiraj('rezultat', 'btn-kopiraj-rec')">⎘ Kopiraj</button>
+          <button class="btn-akcija obrisi" onclick="obrisiRec()">✕ Obriši sve</button>
+        </div>
       </div>
     </div>
 
@@ -598,7 +656,7 @@ Počni da prevodiš
 
     <!-- MODUL ZA REČENICU -->
     <div class="sekcija-tag">// Prevodilac rečenica</div>
-    <h2 class="sekcija-naslov reveal" style="margin-bottom:2rem">CELA<br><span style="color:var(--zuta)">REČENICA</span></h2>
+    <h2 class="sekcija-naslov reveal" style="margin-bottom:2rem">PREVEDI<br><span style="color:var(--zuta)">REČENICU</span></h2>
 
     <div class="prekidac">
       <button id="btn-rec-normalno" class="aktivan" onclick="setRecSmer('normalno')">Normalno → Utrovački</button>
@@ -610,9 +668,13 @@ Počni da prevodiš
       <textarea id="ulaz-recenica" placeholder="kako da napravim..." oninput="prevediRecenicu()"></textarea>
     </div>
 
-    <div>
+    <div style="margin-bottom:0.5rem;">
       <label style="display:block; font-family:'Space Mono',monospace; font-size:0.65rem; letter-spacing:3px; text-transform:uppercase; color:rgba(245,240,232,0.4); margin-bottom:8px;">Rezultat</label>
       <div class="rezultat-box-recenica" id="rezultat-recenica"></div>
+      <div class="akcija-dugmici" id="dugmici-recenica">
+        <button class="btn-akcija" id="btn-kopiraj-rec2" onclick="kopiraj('rezultat-recenica', 'btn-kopiraj-rec2')">⎘ Kopiraj</button>
+        <button class="btn-akcija obrisi" onclick="obrisiRecenicu()">✕ Obriši sve</button>
+      </div>
     </div>
 
   </div>
@@ -624,15 +686,18 @@ Počni da prevodiš
 </footer>
 
 <script>
+  // Kursor samo na desktop
   const kursor = document.getElementById('kursor');
-  document.addEventListener('mousemove', e => {
-    kursor.style.left = e.clientX + 'px';
-    kursor.style.top = e.clientY + 'px';
-  });
-  document.querySelectorAll('a, button, input, textarea').forEach(el => {
-    el.addEventListener('mouseenter', () => kursor.classList.add('veliki'));
-    el.addEventListener('mouseleave', () => kursor.classList.remove('veliki'));
-  });
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.addEventListener('mousemove', e => {
+      kursor.style.left = e.clientX + 'px';
+      kursor.style.top = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button, input, textarea').forEach(el => {
+      el.addEventListener('mouseenter', () => kursor.classList.add('veliki'));
+      el.addEventListener('mouseleave', () => kursor.classList.remove('veliki'));
+    });
+  }
 
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vidljivo'); });
@@ -685,17 +750,46 @@ Počni da prevodiš
     return { rezultat, log, greska: null };
   }
 
+  // ---- KOPIRANJE I BRISANJE ----
+
+  function kopiraj(idElementa, idDugmeta) {
+    const tekst = document.getElementById(idElementa).textContent.trim();
+    if (!tekst) return;
+    navigator.clipboard.writeText(tekst).then(() => {
+      const btn = document.getElementById(idDugmeta);
+      btn.classList.add('kopirano');
+      btn.textContent = '✓ Kopirano';
+      setTimeout(() => {
+        btn.classList.remove('kopirano');
+        btn.textContent = '⎘ Kopiraj';
+      }, 2000);
+    });
+  }
+
+  function obrisiRec() {
+    document.getElementById('ulaz').value = '';
+    document.getElementById('rezultat').textContent = '';
+    document.getElementById('rezultat').classList.remove('ima-tekst');
+    document.getElementById('koraci').innerHTML = '';
+    document.getElementById('greska').textContent = '';
+    document.getElementById('greska-link').style.display = 'none';
+    document.getElementById('dugmici-rec').classList.remove('vidljiva');
+  }
+
+  function obrisiRecenicu() {
+    document.getElementById('ulaz-recenica').value = '';
+    document.getElementById('rezultat-recenica').textContent = '';
+    document.getElementById('rezultat-recenica').classList.remove('ima-tekst');
+    document.getElementById('dugmici-recenica').classList.remove('vidljiva');
+  }
+
   // ---- MODUL ZA REČ ----
 
   let smer = 'normalno';
 
   function setSmer(novi) {
     smer = novi;
-    document.getElementById('ulaz').value = '';
-    document.getElementById('rezultat').textContent = '';
-    document.getElementById('koraci').innerHTML = '';
-    document.getElementById('greska').textContent = '';
-    document.getElementById('greska-link').style.display = 'none';
+    obrisiRec();
     document.getElementById('btn-normalno').classList.toggle('aktivan', smer === 'normalno');
     document.getElementById('btn-obrnuto').classList.toggle('aktivan', smer === 'obrnuto');
     document.getElementById('label-ulaz').textContent = smer === 'normalno' ? 'Unesi normalnu reč' : 'Unesi utrovačku reč';
@@ -707,15 +801,17 @@ Počni da prevodiš
     const koraciEl = document.getElementById('koraci');
     const greskaEl = document.getElementById('greska');
     const greskaLink = document.getElementById('greska-link');
+    const dugmici = document.getElementById('dugmici-rec');
 
     rezultatEl.textContent = '';
+    rezultatEl.classList.remove('ima-tekst');
     koraciEl.innerHTML = '';
     greskaEl.textContent = '';
     greskaLink.style.display = 'none';
+    dugmici.classList.remove('vidljiva');
 
     if (!ulaz) return;
 
-    // Proveri da li ima razmak
     if (ulaz.includes(' ')) {
       greskaEl.textContent = 'Ovde se prevodi samo jedna reč. Za rečenice koristi prevodilac ispod.';
       greskaLink.style.display = 'block';
@@ -733,6 +829,8 @@ Počni da prevodiš
       });
     } else {
       rezultatEl.textContent = ishod.rezultat;
+      rezultatEl.classList.add('ima-tekst');
+      dugmici.classList.add('vidljiva');
     }
   }
 
@@ -742,8 +840,7 @@ Počni da prevodiš
 
   function setRecSmer(novi) {
     recSmer = novi;
-    document.getElementById('ulaz-recenica').value = '';
-    document.getElementById('rezultat-recenica').textContent = '';
+    obrisiRecenicu();
     document.getElementById('btn-rec-normalno').classList.toggle('aktivan', recSmer === 'normalno');
     document.getElementById('btn-rec-obrnuto').classList.toggle('aktivan', recSmer === 'obrnuto');
     document.getElementById('label-recenica').textContent = recSmer === 'normalno' ? 'Unesi normalnu rečenicu' : 'Unesi utrovačku rečenicu';
@@ -752,10 +849,14 @@ Počni da prevodiš
   function prevediRecenicu() {
     const ulaz = document.getElementById('ulaz-recenica').value;
     const rezultatEl = document.getElementById('rezultat-recenica');
+    const dugmici = document.getElementById('dugmici-recenica');
+
+    rezultatEl.classList.remove('ima-tekst');
+    dugmici.classList.remove('vidljiva');
+
     if (!ulaz.trim()) { rezultatEl.textContent = ''; return; }
 
     const reci = ulaz.split(' ');
-
     const prevedene = reci.map(rec => {
       const cistaRec = rec.toLowerCase().replace(/[^a-zšđčćž]/gi, '');
       const interpunkcija = rec.replace(/[a-zšđčćž]/gi, '');
@@ -772,6 +873,8 @@ Počni da prevodiš
     });
 
     rezultatEl.textContent = prevedene.join(' ');
+    rezultatEl.classList.add('ima-tekst');
+    dugmici.classList.add('vidljiva');
   }
 </script>
 </body>
