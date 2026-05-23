@@ -289,6 +289,12 @@
 
     .prevodilac-wrapper { max-width: 680px; margin: 0 auto; }
 
+    .razdvojnica {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin: 4rem 0;
+    }
+
     .prekidac {
       display: flex;
       margin-bottom: 2rem;
@@ -343,6 +349,24 @@
     input[type="text"]:focus { border-color: var(--zuta); }
     input[type="text"]::placeholder { color: rgba(245,240,232,0.2); }
 
+    textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--bela);
+      font-family: 'Space Mono', monospace;
+      font-size: 1rem;
+      padding: 1rem 1.2rem;
+      outline: none;
+      transition: border-color 0.2s;
+      caret-color: var(--zuta);
+      resize: vertical;
+      min-height: 110px;
+      line-height: 1.7;
+    }
+    textarea:focus { border-color: var(--zuta); }
+    textarea::placeholder { color: rgba(245,240,232,0.2); }
+
     .strelica {
       font-size: 1.5rem;
       color: var(--narandzasta);
@@ -360,6 +384,20 @@
       letter-spacing: 2px;
       padding: 1rem 1.2rem;
       min-height: 68px;
+    }
+
+    .rezultat-box-recenica {
+      width: 100%;
+      background: rgba(255,224,61,0.05);
+      border: 1px solid rgba(255,224,61,0.2);
+      color: var(--zuta);
+      font-family: 'Space Mono', monospace;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      padding: 1rem 1.2rem;
+      min-height: 110px;
+      line-height: 1.7;
+      word-break: break-word;
     }
 
     .greska {
@@ -438,7 +476,7 @@
 </nav>
 
 <section class="hero">
-  <div class="hero-bg-text">UTRO</div>
+  <div class="hero-bg-text">/////Tajne reči</div>
   <div class="deco-linija">
     <span style="width:60px"></span>
     <span style="width:40px"></span>
@@ -446,14 +484,14 @@
     <span style="width:30px"></span>
     <span style="width:55px"></span>
   </div>
-  <div class="hero-tag">// Tajni jezik · Verzija 1.0</div>
+  <div class="hero-tag">// Tajni jezik · Verzija 2.0 reči i rečenice</div>
   <h1 class="hero-naslov">
     UTRO<span class="zuta">VAČ</span><span class="narandzasta">KI</span>
     <br>JE<span class="zuta">ZIK</span>
   </h1>
   <p class="hero-opis">
-    Tajni jezik koji su deca izmišljala u školskim hodnicima.
-    Sada u digitalnom obliku — prevedi bilo koju reč za sekund.
+    Tajni jezik koji je kružio među društvom — šifre koje su samo “upućeni” razumeli dok su komentarisali ribe, planove i priče koje ne idu javno.
+Sada je sve to prebačeno u digitalni svet. Upiši bilo koju reč i za sekund je pretvori u kod koji samo ekipa razume.
   </p>
   <div class="hero-cta">
     <a onclick="document.getElementById('prevodilac').scrollIntoView({behavior:'smooth'})" class="btn-glavni">Počni da prevodiš</a>
@@ -493,7 +531,7 @@
       <div class="korak-broj">2</div>
       <div class="korak-ikona">🔀</div>
       <div class="korak-naslov">Zameni redosled</div>
-      <p class="korak-tekst">Drugi slog ide na prvo mesto, prvi slog ide na drugo.</p>
+      <p class="korak-tekst">Drugi i svaki naredni slog ide na prvo mesto, prvi slog ide na drugo.</p>
       <div class="korak-formula">da · de</div>
     </div>
     <div class="korak-kartica">
@@ -515,8 +553,10 @@
 
 <section class="prevodilac-sekcija" id="prevodilac">
   <div class="prevodilac-wrapper">
-    <div class="sekcija-tag">// Prevodilac</div>
-    <h2 class="sekcija-naslov reveal" style="margin-bottom:2rem">PROBAJ<br><span style="color:var(--zuta)">SAM</span></h2>
+
+    <!-- MODUL ZA REČ -->
+    <div class="sekcija-tag">// Prevodilac reči</div>
+    <h2 class="sekcija-naslov reveal" style="margin-bottom:2rem">PREVEDI<br><span style="color:var(--zuta)">REČ</span></h2>
 
     <div class="prekidac">
       <button id="btn-normalno" class="aktivan" onclick="setSmer('normalno')">Normalno → Utrovački</button>
@@ -530,19 +570,42 @@
       </div>
       <div class="strelica">→</div>
       <div class="kolona">
-        <label>Rezultat</label>
+        <label>Prevod</label>
         <div class="rezultat-box" id="rezultat"></div>
       </div>
     </div>
 
     <div class="greska" id="greska"></div>
     <div class="koraci-prikaz" id="koraci"></div>
+
+    <!-- RAZDVOJNICA -->
+    <hr class="razdvojnica">
+
+    <!-- MODUL ZA REČENICU -->
+    <div class="sekcija-tag">// Prevodilac rečenica</div>
+    <h2 class="sekcija-naslov reveal" style="margin-bottom:2rem">PREVEDI CELU<br><span style="color:var(--zuta)">REČENICU</span></h2>
+
+    <div class="prekidac">
+      <button id="btn-rec-normalno" class="aktivan" onclick="setRecSmer('normalno')">Normalno → Utrovački</button>
+      <button id="btn-rec-obrnuto" onclick="setRecSmer('obrnuto')">Utrovački → Normalno</button>
+    </div>
+
+    <div style="margin-bottom:1rem;">
+      <label style="display:block; font-family:'Space Mono',monospace; font-size:0.65rem; letter-spacing:3px; text-transform:uppercase; color:rgba(245,240,232,0.4); margin-bottom:8px;" id="label-recenica">Unesi normalnu rečenicu</label>
+      <textarea id="ulaz-recenica" placeholder="unesi rečenicu" oninput="prevediRecenicu()"></textarea>
+    </div>
+
+    <div>
+      <label style="display:block; font-family:'Space Mono',monospace; font-size:0.65rem; letter-spacing:3px; text-transform:uppercase; color:rgba(245,240,232,0.4); margin-bottom:8px;">Prevod</label>
+      <div class="rezultat-box-recenica" id="rezultat-recenica"></div>
+    </div>
+
   </div>
 </section>
 
 <footer>
   <div class="footer-logo">Utrovački</div>
-  <div class="footer-tekst">Tajni jezik srpskih školskih hodnika · 2024</div>
+  <div class="footer-tekst">Čeksov prevoliac na utrovački · 2026</div>
 </footer>
 
 <script>
@@ -551,7 +614,7 @@
     kursor.style.left = e.clientX + 'px';
     kursor.style.top = e.clientY + 'px';
   });
-  document.querySelectorAll('a, button, input').forEach(el => {
+  document.querySelectorAll('a, button, input, textarea').forEach(el => {
     el.addEventListener('mouseenter', () => kursor.classList.add('veliki'));
     el.addEventListener('mouseleave', () => kursor.classList.remove('veliki'));
   });
@@ -561,18 +624,7 @@
   }, { threshold: 0.15 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  let smer = 'normalno';
-
-  function setSmer(novi) {
-    smer = novi;
-    document.getElementById('ulaz').value = '';
-    document.getElementById('rezultat').textContent = '';
-    document.getElementById('koraci').innerHTML = '';
-    document.getElementById('greska').textContent = '';
-    document.getElementById('btn-normalno').classList.toggle('aktivan', smer === 'normalno');
-    document.getElementById('btn-obrnuto').classList.toggle('aktivan', smer === 'obrnuto');
-    document.getElementById('label-ulaz').textContent = smer === 'normalno' ? 'Unesi normalnu reč' : 'Unesi utrovačku reč';
-  }
+  // ---- ZAJEDNICKE FUNKCIJE ----
 
   function napravljSlogove(rec) {
     const samoglasnici = 'aeiouaeiou';
@@ -593,36 +645,46 @@
     const slogovi = napravljSlogove(rec);
     log.push(`Slogovi: <strong>${slogovi.join(' · ')}</strong>`);
     if (slogovi.length < 2) return { rezultat: null, log, greska: 'Reč mora imati najmanje 2 sloga.' };
-
     const prvi = slogovi[0];
     const ostali = slogovi.slice(1).join('');
     const utrovacki = 'u' + ostali + 'za' + prvi + 'nje';
-
     log.push(`Složi: <span class="dodaj">u</span> + <strong>${ostali}</strong> + <span class="dodaj">za</span> + <strong>${prvi}</strong> + <span class="dodaj">nje</span>`);
     return { rezultat: utrovacki, log, greska: null };
-}
+  }
 
-function desifruj(rec) {
+  function desifruj(rec) {
     const log = [];
     if (!rec.startsWith('u')) return { rezultat: null, log, greska: 'Utrovačka reč mora počinjati sa "u".' };
     rec = rec.slice(1);
     log.push(`Skinut <span class="brisi">u</span> sa početka → <strong>${rec}</strong>`);
-
     if (!rec.endsWith('nje')) return { rezultat: null, log, greska: 'Utrovačka reč mora završavati sa "nje".' };
     rec = rec.slice(0, -3);
     log.push(`Skinut <span class="brisi">nje</span> sa kraja → <strong>${rec}</strong>`);
-
     const idx = rec.indexOf('za');
     if (idx === -1) return { rezultat: null, log, greska: 'Nema "za" u sredini.' };
-
     const ostaliSlogovi = rec.slice(0, idx);
     const prviSlog = rec.slice(idx + 2);
-    log.push(`Podeli na <span class="brisi">za</span>: ostali slogovi = <strong>${ostaliSlogovi}</strong>, prvi slog = <strong>${prviSlog}</strong>`);
-
+    log.push(`Podeli na <span class="brisi">za</span>: ostali = <strong>${ostaliSlogovi}</strong>, prvi = <strong>${prviSlog}</strong>`);
     const rezultat = prviSlog + ostaliSlogovi;
     log.push(`Spoji: <strong>${prviSlog}</strong> + <strong>${ostaliSlogovi}</strong> = <strong>${rezultat}</strong>`);
     return { rezultat, log, greska: null };
-}
+  }
+
+  // ---- MODUL ZA REČ ----
+
+  let smer = 'normalno';
+
+  function setSmer(novi) {
+    smer = novi;
+    document.getElementById('ulaz').value = '';
+    document.getElementById('rezultat').textContent = '';
+    document.getElementById('koraci').innerHTML = '';
+    document.getElementById('greska').textContent = '';
+    document.getElementById('btn-normalno').classList.toggle('aktivan', smer === 'normalno');
+    document.getElementById('btn-obrnuto').classList.toggle('aktivan', smer === 'obrnuto');
+    document.getElementById('label-ulaz').textContent = smer === 'normalno' ? 'Unesi normalnu reč' : 'Unesi utrovačku reč';
+  }
+
   function prevedi() {
     const ulaz = document.getElementById('ulaz').value.trim().toLowerCase();
     const rezultatEl = document.getElementById('rezultat');
@@ -642,6 +704,47 @@ function desifruj(rec) {
     } else {
       rezultatEl.textContent = ishod.rezultat;
     }
+  }
+
+  // ---- MODUL ZA REČENICU ----
+
+  let recSmer = 'normalno';
+
+  function setRecSmer(novi) {
+    recSmer = novi;
+    document.getElementById('ulaz-recenica').value = '';
+    document.getElementById('rezultat-recenica').textContent = '';
+    document.getElementById('btn-rec-normalno').classList.toggle('aktivan', recSmer === 'normalno');
+    document.getElementById('btn-rec-obrnuto').classList.toggle('aktivan', recSmer === 'obrnuto');
+    document.getElementById('label-recenica').textContent = recSmer === 'normalno' ? 'Unesi normalnu rečenicu' : 'Unesi utrovačku rečenicu';
+  }
+
+  function prevediRecenicu() {
+    const ulaz = document.getElementById('ulaz-recenica').value;
+    const rezultatEl = document.getElementById('rezultat-recenica');
+    if (!ulaz.trim()) { rezultatEl.textContent = ''; return; }
+
+    const reci = ulaz.split(' ');
+
+    const prevedene = reci.map(rec => {
+      const cistaRec = rec.toLowerCase().replace(/[^a-zšđčćž]/gi, '');
+      const interpunkcija = rec.replace(/[a-zšđčćž]/gi, '');
+      if (!cistaRec) return rec;
+
+      // Jednoslozne reci ostaju kakve jesu
+      const slogovi = napravljSlogove(cistaRec);
+      if (slogovi.length < 2) return rec;
+
+      if (recSmer === 'normalno') {
+        const ishod = sifruj(cistaRec);
+        return ishod.rezultat ? ishod.rezultat + interpunkcija : rec;
+      } else {
+        const ishod = desifruj(cistaRec);
+        return ishod.rezultat ? ishod.rezultat + interpunkcija : rec;
+      }
+    });
+
+    rezultatEl.textContent = prevedene.join(' ');
   }
 </script>
 </body>
