@@ -33,7 +33,6 @@
       min-height: 100%;
     }
 
-    /* Kursor samo na desktop */
     @media (hover: hover) and (pointer: fine) {
       body { cursor: none; }
       .kursor { display: block; }
@@ -389,7 +388,6 @@
       text-align: center;
     }
 
-    /* REZULTAT BOXOVI */
     .rezultat-box {
       width: 100%;
       background: rgba(255,224,61,0.04);
@@ -428,6 +426,21 @@
       box-shadow: 0 0 20px rgba(255,224,61,0.06);
     }
 
+    /* BANER ZA AUTO-DESIFROVANJE */
+    .auto-baner {
+      background: rgba(255,224,61,0.08);
+      border: 1px solid rgba(255,224,61,0.25);
+      border-radius: 6px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 2rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--zuta);
+      display: none;
+    }
+    .auto-baner.vidljiv { display: block; }
+    .auto-baner span { color: rgba(245,240,232,0.5); display: block; margin-top: 4px; font-size: 0.7rem; }
+
     .greska {
       color: var(--narandzasta);
       font-family: 'Space Mono', monospace;
@@ -457,11 +470,11 @@
     .brisi { color: #ff6b6b; }
     .dodaj { color: #69db7c; }
 
-    /* DUGMICI */
     .akcija-dugmici {
       display: none;
       gap: 8px;
       margin-top: 0.6rem;
+      flex-wrap: wrap;
     }
     .akcija-dugmici.vidljiva { display: flex; }
 
@@ -484,6 +497,28 @@
     .btn-akcija:hover { border-color: var(--zuta); color: var(--zuta); }
     .btn-akcija.kopirano { border-color: #69db7c; color: #69db7c; }
     .btn-akcija.obrisi:hover { border-color: #ff6b6b; color: #ff6b6b; }
+
+    .btn-whatsapp {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 7px 14px;
+      border: 1px solid rgba(37,211,102,0.4);
+      border-radius: 4px;
+      background: transparent;
+      color: rgba(37,211,102,0.7);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-whatsapp:hover {
+      border-color: #25D366;
+      color: #25D366;
+      background: rgba(37,211,102,0.06);
+    }
 
     footer {
       border-top: 1px solid rgba(255,255,255,0.08);
@@ -618,6 +653,12 @@
 <section class="prevodilac-sekcija" id="prevodilac">
   <div class="prevodilac-wrapper">
 
+    <!-- AUTO DESIFROVANJE BANER -->
+    <div class="auto-baner" id="auto-baner">
+      🔓 Poruka automatski dešifrovana!
+      <span>Neko ti je poslao utrovačku poruku — evo šta piše.</span>
+    </div>
+
     <!-- MODUL ZA REČ -->
     <div class="sekcija-tag">// Prevodilac reči</div>
     <h2 class="sekcija-naslov reveal" style="margin-bottom:2rem">PREVEDI<br><span style="color:var(--zuta)">REČ</span></h2>
@@ -651,7 +692,6 @@
     </div>
     <div class="koraci-prikaz" id="koraci"></div>
 
-    <!-- RAZDVOJNICA -->
     <hr class="razdvojnica">
 
     <!-- MODUL ZA REČENICU -->
@@ -674,6 +714,7 @@
       <div class="akcija-dugmici" id="dugmici-recenica">
         <button class="btn-akcija" id="btn-kopiraj-rec2" onclick="kopiraj('rezultat-recenica', 'btn-kopiraj-rec2')">⎘ Kopiraj</button>
         <button class="btn-akcija obrisi" onclick="obrisiRecenicu()">✕ Obriši sve</button>
+        <button class="btn-whatsapp" onclick="posaljiWhatsApp()">📲 Pošalji na WhatsApp</button>
       </div>
     </div>
 
@@ -686,7 +727,6 @@
 </footer>
 
 <script>
-  // Kursor samo na desktop
   const kursor = document.getElementById('kursor');
   if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
     document.addEventListener('mousemove', e => {
@@ -703,6 +743,27 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vidljivo'); });
   }, { threshold: 0.15 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ---- AUTO DESIFROVANJE IZ URL-a ----
+
+  window.addEventListener('load', () => {
+    const params = new URLSearchParams(window.location.search);
+    const poruka = params.get('poruka');
+    if (poruka) {
+      // Prebaci na utrovački → normalno mod
+      setRecSmer('obrnuto');
+      // Popuni polje
+      document.getElementById('ulaz-recenica').value = poruka;
+      // Prevedi
+      prevediRecenicu();
+      // Pokazi baner
+      document.getElementById('auto-baner').classList.add('vidljiv');
+      // Skroluj do prevodilaca
+      setTimeout(() => {
+        document.getElementById('prevodilac').scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    }
+  });
 
   // ---- ZAJEDNICKE FUNKCIJE ----
 
@@ -781,6 +842,19 @@
     document.getElementById('rezultat-recenica').textContent = '';
     document.getElementById('rezultat-recenica').classList.remove('ima-tekst');
     document.getElementById('dugmici-recenica').classList.remove('vidljiva');
+    document.getElementById('auto-baner').classList.remove('vidljiv');
+  }
+
+  // ---- WHATSAPP ----
+
+  function posaljiWhatsApp() {
+    const tekst = document.getElementById('rezultat-recenica').textContent.trim();
+    if (!tekst) return;
+    const sajt = window.location.href.split('?')[0];
+    const link = sajt + '?poruka=' + encodeURIComponent(tekst);
+    const poruka = tekst + '\n\n🔓 Dešifruj ovde: ' + link;
+    const url = 'https://wa.me/?text=' + encodeURIComponent(poruka);
+    window.open(url, '_blank');
   }
 
   // ---- MODUL ZA REČ ----
